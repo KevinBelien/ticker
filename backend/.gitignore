@@ -1,0 +1,6 @@
+node_modules/
+data/
+ticker.db
+ticker.db-wal
+ticker.db-shm
+.env
