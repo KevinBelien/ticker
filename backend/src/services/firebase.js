@@ -96,7 +96,10 @@ async function checkAndNotify(predictedKw) {
 
   for (const device of devices) {
     // Effective threshold = the highest of user setting and current month peak
-    const effectiveThreshold = Math.max(device.peak_threshold_kw, currentMonthPeak);
+    const effectiveThreshold = Math.max(
+      device.peak_threshold_kw,
+      currentMonthPeak,
+    );
 
     if (predictedKw <= effectiveThreshold) continue;
     if (_alertedTokens.has(device.fcm_token)) continue;
@@ -117,9 +120,14 @@ async function checkAndNotify(predictedKw) {
           month_peak_kw: String(currentMonthPeak),
         },
       });
-      console.log(`Firebase: alert to ${device.device_name} (predicted ${predictedKw.toFixed(2)} kW > effective ${effectiveThreshold.toFixed(2)} kW)`);
+      console.log(
+        `Firebase: alert to ${device.device_name} (predicted ${predictedKw.toFixed(2)} kW > effective ${effectiveThreshold.toFixed(2)} kW)`,
+      );
     } catch (err) {
-      console.error(`Firebase: failed to notify ${device.device_name}:`, err.message);
+      console.error(
+        `Firebase: failed to notify ${device.device_name}:`,
+        err.message,
+      );
     }
   }
 }

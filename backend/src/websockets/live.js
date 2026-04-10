@@ -43,13 +43,18 @@ function setupWebSocket(io, meterService) {
         if (fcmToken) {
           try {
             const row = getDb()
-              .prepare("SELECT peak_threshold_kw FROM devices WHERE fcm_token = ?")
+              .prepare(
+                "SELECT peak_threshold_kw FROM devices WHERE fcm_token = ?",
+              )
               .get(fcmToken);
             if (row) thresholdKw = row.peak_threshold_kw;
           } catch (_) {}
         }
 
-        socket.emit("auth_ok", { status: "authenticated", peak_threshold_kw: thresholdKw });
+        socket.emit("auth_ok", {
+          status: "authenticated",
+          peak_threshold_kw: thresholdKw,
+        });
 
         let alertSent = false;
         let lastWindowBucket = _getWindowBucket();
@@ -87,7 +92,9 @@ function setupWebSocket(io, meterService) {
           if (!isNaN(newThreshold) && newThreshold > 0) {
             thresholdKw = newThreshold;
             alertSent = false;
-            socket.emit("threshold_updated", { peak_threshold_kw: thresholdKw });
+            socket.emit("threshold_updated", {
+              peak_threshold_kw: thresholdKw,
+            });
           }
         });
 

@@ -14,7 +14,8 @@ function registerDevice(req, res) {
       .json({ error: "device_name and fcm_token are required." });
   }
 
-  const threshold = typeof peak_threshold_kw === 'number' ? peak_threshold_kw : 2.5;
+  const threshold =
+    typeof peak_threshold_kw === "number" ? peak_threshold_kw : 2.5;
 
   const db = getDb();
   const info = db
@@ -35,7 +36,9 @@ function registerDevice(req, res) {
 function listDevices(req, res) {
   const db = getDb();
   const rows = db
-    .prepare(`SELECT id, device_name, peak_threshold_kw, created_at FROM devices`)
+    .prepare(
+      `SELECT id, device_name, peak_threshold_kw, created_at FROM devices`,
+    )
     .all();
   res.json({ devices: rows });
 }
@@ -45,11 +48,16 @@ function updateDevice(req, res) {
   const { id } = req.params;
   const { peak_threshold_kw } = req.body;
 
-  if (typeof peak_threshold_kw !== 'number' || peak_threshold_kw < 0) {
-    return res.status(400).json({ error: "peak_threshold_kw must be a positive number." });
+  if (typeof peak_threshold_kw !== "number" || peak_threshold_kw < 0) {
+    return res
+      .status(400)
+      .json({ error: "peak_threshold_kw must be a positive number." });
   }
 
-  db.prepare(`UPDATE devices SET peak_threshold_kw = ? WHERE id = ?`).run(peak_threshold_kw, id);
+  db.prepare(`UPDATE devices SET peak_threshold_kw = ? WHERE id = ?`).run(
+    peak_threshold_kw,
+    id,
+  );
   res.json({ ok: true, peak_threshold_kw });
 }
 
