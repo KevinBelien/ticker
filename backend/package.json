@@ -2,8 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
+    "start": "node src/server.js",
+    "start:mock": "node src/server.mock.js",
+    "create-db": "node src/scripts/create-db.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,6 +19,8 @@
     "dotenv": "^17.4.1",
     "express": "^5.2.1",
     "firebase-admin": "^13.7.0",
+    "serialport": "^13.0.0",
+    "@serialport/parser-readline": "^12.0.0",
     "socket.io": "^4.8.3"
   }
 }
