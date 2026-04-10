@@ -1,0 +1,24 @@
+services:
+  ticker:
+    image: ghcr.io/kevinbelien/ticker/backend:latest
+    # For local development, comment image and uncomment build:
+    # build: .
+    container_name: ticker
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - API_KEY=${API_KEY:-ChangeMe_SomethingSecret}
+      - PORT=8080
+      - DATA_DIR=/data
+      - P1_SERIAL_PORT=/dev/ttyUSB0
+      - P1_BAUD_RATE=115200
+      - STORAGE_INTERVAL_MS=60000
+      - FIREBASE_SA_BASE64=${FIREBASE_SA_BASE64:-}
+    volumes:
+      - /data/config/ticker:/data
+    ports:
+      - 8880:8080
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    restart: unless-stopped

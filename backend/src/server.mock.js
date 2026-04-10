@@ -1,3 +1,11 @@
+/**
+ * MOCK server entry point – runs the backend with fake P1 data.
+ *
+ *   node src/server.mock.js
+ *
+ * DELETE THIS FILE when real hardware is available.
+ */
+
 const http = require("http");
 const express = require("express");
 const cors = require("cors");
@@ -5,7 +13,7 @@ const { Server: SocketIO } = require("socket.io");
 
 const config = require("./config");
 const { getDb, closeDb } = require("./services/database");
-const MeterService = require("./services/meter");
+const MeterServiceMock = require("./services/meter.mock");
 const { setupWebSocket } = require("./websockets/live");
 const { initFirebase } = require("./services/firebase");
 const apiRoutes = require("./routes/api");
@@ -17,8 +25,6 @@ const apiRoutes = require("./routes/api");
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-// Mount API routes under /api
 app.use("/api", apiRoutes);
 
 const server = http.createServer(app);
@@ -32,25 +38,19 @@ const io = new SocketIO(server, {
 });
 
 /* ------------------------------------------------------------------ */
-/*  Bootstrap                                                          */
+/*  Bootstrap (mock)                                                   */
 /* ------------------------------------------------------------------ */
 
-// 1. Ensure database exists (creates + seeds on first run)
 getDb();
-
-// 2. Firebase (optional – only if service account is mounted)
 initFirebase();
 
-// 3. Start the meter service (P1 reader + 15-min storage loop)
-const meterService = new MeterService();
+const meterService = new MeterServiceMock();
 meterService.start();
 
-// 4. Wire up WebSocket live feed
 setupWebSocket(io, meterService);
 
-// 5. Start listening
 server.listen(config.port, () => {
-  console.log(`Ticker backend listening on port ${config.port}`);
+  console.log(`[MOCK] Ticker backend listening on port ${config.port}`);
 });
 
 /* ------------------------------------------------------------------ */
